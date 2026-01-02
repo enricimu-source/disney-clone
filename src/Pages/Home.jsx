@@ -9,7 +9,7 @@ function Home() {
   const searchMovies = useSelector((state) => state.search.movies);
 
   return (
-    <div className="bg-[#0F1014] min-h-screen text-white">
+    <div className=" pt-[70px] bg-[#0F1014] min-h-screen text-white">
       <Header />
 
       {searchMovies.length > 0 ? (
