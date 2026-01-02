@@ -1,0 +1,13 @@
+#root {
+  width:100%;
+  background-color: black;
+
+}
+.card {
+  overflow: hidden;
+}
+
+
+.login {
+  background-color: red;
+}
