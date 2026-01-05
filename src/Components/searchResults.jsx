@@ -1,9 +1,8 @@
 import { useSelector } from "react-redux";
 import MovieCard from "./MovieCard";
 
-function searchResults() {
+function SearchResults() {
   const { movies, loading } = useSelector((state) => state.search);
-   if (!movies) return null;
 
   if (loading) {
     return (
@@ -13,10 +12,10 @@ function searchResults() {
     );
   }
 
-  if (movies.length === 0) return null;
+  if (!movies || movies.length === 0) return null;
 
   return (
-    <div className="px-6 mt-6">
+    <div className="px-6 mt-6 pb-24">
       <h2 className="text-white text-xl font-bold mb-4">
         Search Results
       </h2>
@@ -30,4 +29,4 @@ function searchResults() {
   );
 }
 
-export default searchResults;
+export default SearchResults;

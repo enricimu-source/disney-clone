@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import logo from "../assets/images/logo.png";
 import {
   HiHome,
@@ -15,8 +15,10 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchSearchMovies, clearSearch } from "../Redux/searchSlice";
+
+import SearchResults from "./searchResults";
 
 function Header() {
   const [toggle, setToggle] = useState(false);
@@ -24,8 +26,6 @@ function Header() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { results } = useSelector((state) => state.search);
 
   const menu = [
     { name: "HOME", icon: HiHome },
@@ -51,90 +51,84 @@ function Header() {
     if (name === "WATCHLIST") navigate("/watchlist");
 
     if (name === "SEARCH") {
-      setShowSearch((prev) => !prev); 
+      setShowSearch(true);
       dispatch(clearSearch());
     }
   };
 
-  useEffect(() => {
-    if (showSearch && window.innerWidth < 768) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => (document.body.style.overflow = "auto");
-  }, [showSearch]);
-
   return (
-<header className="fixed top-3 w-full z-50 bg-black px-5 md:px-10 h-[70px] flex items-center justify-between rounded-xl">
-      {/* LEFT */}
-      <div className="flex items-center gap-10">
-        <img src={logo} alt="Disney" className="w-[65px] md:w-[115px]" />
+    <>
+      {/* HEADER */}
+      <header className="fixed top-3 w-full z-50 bg-black px-5 md:px-10 h-[70px] flex items-center justify-between rounded-xl">
+        <div className="flex items-center gap-10">
+          <img src={logo} alt="Disney" className="w-[65px] md:w-[115px]" />
 
-        {/* DESKTOP MENU */}
-        <div className="hidden md:flex gap-6 items-center">
-          {menu.map((item, index) => (
-            <div key={index} onClick={() => handleMenuClick(item.name)}>
-              <Headeritem name={item.name} Icon={item.icon} />
-            </div>
-          ))}
-
-          {showSearch && (
-            <input
-              autoFocus
-              type="text"
-              placeholder="Search movies..."
-              onChange={handleSearch}
-              className="ml-4 px-4 py-2 rounded bg-gray-800 text-white outline-none w-[280px]"
-            />
-          )}
-        </div>
-
-        {/* MOBILE MENU */}
-        <div className="flex md:hidden gap-6 items-center">
-          {menu.slice(0, 3).map((item, index) => (
-            <div key={index} onClick={() => handleMenuClick(item.name)}>
-              <Headeritem name="" Icon={item.icon} />
-            </div>
-          ))}
-
-          <div className="relative">
-            <div onClick={() => setToggle(!toggle)}>
-              <Headeritem name="" Icon={HiDotsVertical} />
-            </div>
-
-            {toggle && (
-              <div className="absolute mt-3 bg-black border border-gray-700 p-3 z-50">
-                {menu.slice(3).map((item, index) => (
-                  <div key={index} onClick={() => handleMenuClick(item.name)}>
-                    <Headeritem name={item.name} Icon={item.icon} />
-                  </div>
-                ))}
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex gap-6 items-center">
+            {menu.map((item, index) => (
+              <div key={index} onClick={() => handleMenuClick(item.name)}>
+                <Headeritem name={item.name} Icon={item.icon} />
               </div>
+            ))}
+
+            {showSearch && (
+              <input
+                autoFocus
+                type="text"
+                placeholder="Search movies..."
+                onChange={handleSearch}
+                className="ml-4 px-4 py-2 rounded bg-gray-800 text-white outline-none w-[280px]"
+              />
             )}
           </div>
+
+          {/* MOBILE MENU */}
+          <div className="flex md:hidden gap-6 items-center">
+            {menu.slice(0, 3).map((item, index) => (
+              <div key={index} onClick={() => handleMenuClick(item.name)}>
+                <Headeritem name="" Icon={item.icon} />
+              </div>
+            ))}
+
+            <div className="relative">
+              <div onClick={() => setToggle(!toggle)}>
+                <Headeritem name="" Icon={HiDotsVertical} />
+              </div>
+
+              {toggle && (
+                <div className="absolute mt-3 bg-black border border-gray-700 p-3 z-50">
+                  {menu.slice(3).map((item, index) => (
+                    <div key={index} onClick={() => handleMenuClick(item.name)}>
+                      <Headeritem name={item.name} Icon={item.icon} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* RIGHT */}
-      <div className="flex items-center gap-4">
-        <img
-          src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png"
-          className="w-9 h-9 rounded-full cursor-pointer"
-          onClick={handleLogout}
-        />
+        {/* RIGHT */}
+        <div className="flex items-center gap-4">
+          <img
+            src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png"
+            className="w-9 h-9 rounded-full cursor-pointer"
+            onClick={handleLogout}
+          />
 
-        <button
-          onClick={handleLogout}
-          className="hidden md:block bg-red-600 px-3 py-1 rounded text-white"
-        >
-          Logout
-        </button>
-      </div>
+          <button
+            onClick={handleLogout}
+            className="hidden md:block bg-red-600 px-3 py-1 rounded text-white"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
 
+      {/* MOBILE SEARCH OVERLAY */}
       {showSearch && (
-        <div className="fixed inset-0 top-[70px] bg-black z-[9999] flex flex-col md:hidden">
-          <div className="p-4 flex items-center gap-3 border-b border-gray-700">
+        <div className="fixed top-[90px] left-0 right-0 bottom-0 bg-black z-[9999] md:hidden overflow-y-auto">
+          <div className="p-4 flex items-center gap-3 border-b border-gray-700 sticky top-0 bg-black">
             <input
               autoFocus
               type="text"
@@ -147,23 +141,11 @@ function Header() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4">
-            {results?.length === 0 && (
-              <p className="text-gray-400 mt-6">No results</p>
-            )}
-
-            {results?.map((movie) => (
-              <div
-                key={movie.id}
-                className="py-3 border-b border-gray-800"
-              >
-                {movie.title || movie.name}
-              </div>
-            ))}
-          </div>
+          {/* 🔥 RESULTS SHOW WHILE TYPING 🔥 */}
+          <SearchResults />
         </div>
       )}
-    </header>
+    </>
   );
 }
 
