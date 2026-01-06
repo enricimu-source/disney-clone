@@ -48,23 +48,29 @@ function Header() {
   };
 
   const handleMenuClick = (name) => {
-    if (name === "WATCHLIST") navigate("/watchlist");
+  if (name === "WATCHLIST") {
+    navigate("/watchlist");
+    return;
+  }
 
-    if (name === "SEARCH") {
-      setShowSearch(true);
-      dispatch(clearSearch());
-    }
-  };
+  if (name === "SEARCH") {
+    setShowSearch((prev) => !prev);
+    dispatch(clearSearch());
+    return;
+  }
+};
+
 
   return (
     <>
       {/* HEADER */}
-      <header className="fixed top-3 w-full z-50 bg-black px-5 md:px-10 h-[70px] flex items-center justify-between rounded-xl">
-        <div className="flex items-center gap-10">
-          <img src={logo} alt="Disney" className="w-[65px] md:w-[115px]" />
+      <header className="fixed top-0 w-full z-50 bg-black px-5 md:px-10 h-[70px] flex items-center justify-between rounded-xl">
+        <div className="flex items-center gap-10 ">
+          <img src={logo} alt="Disney" className="w-[60px] md:w-70px]" />
 
           {/* DESKTOP MENU */}
-          <div className="hidden md:flex gap-6 items-center">
+          <div className="hidden md:flex gap-6 justify-center">
+             <div className="flex gap-6 items-center">
             {menu.map((item, index) => (
               <div key={index} onClick={() => handleMenuClick(item.name)}>
                 <Headeritem name={item.name} Icon={item.icon} />
@@ -80,6 +86,7 @@ function Header() {
                 className="ml-4 px-4 py-2 rounded bg-gray-800 text-white outline-none w-[280px]"
               />
             )}
+            </div>
           </div>
 
           {/* MOBILE MENU */}
@@ -96,9 +103,9 @@ function Header() {
               </div>
 
               {toggle && (
-                <div className="absolute mt-3 bg-black border border-gray-700 p-3 z-50">
+                <div className="absolute mt-3 bg-black border border-gray-700 p-3 z-50" >
                   {menu.slice(3).map((item, index) => (
-                    <div key={index} onClick={() => handleMenuClick(item.name)}>
+                    <div className="mb-3" key={index} onClick={() => handleMenuClick(item.name)}>
                       <Headeritem name={item.name} Icon={item.icon} />
                     </div>
                   ))}
@@ -127,7 +134,7 @@ function Header() {
 
       {/* MOBILE SEARCH OVERLAY */}
       {showSearch && (
-        <div className="fixed top-[90px] left-0 right-0 bottom-0 bg-black z-[9999] md:hidden overflow-y-auto">
+        <div className="fixed top-[70px] left-0 right-0 bottom-0 bg-black z-[9999] md:hidden overflow-y-auto">
           <div className="p-4 flex items-center gap-3 border-b border-gray-700 sticky top-0 bg-black">
             <input
               autoFocus
