@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useRef } from "react";
 import logo from "../assets/images/logo.png";
 import {
   HiHome,
@@ -23,6 +23,8 @@ import SearchResults from "./searchResults";
 function Header() {
   const [toggle, setToggle] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
+  const avatarRef = useRef(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -69,7 +71,7 @@ function Header() {
           <img src={logo} alt="Disney" className="w-[60px] md:w-70px]" />
 
           {/* DESKTOP MENU */}
-          <div className="hidden md:flex gap-6 justify-center">
+          <div className="hidden md:flex gap-6 justify-center ml-10 md:ml-20">
              <div className="flex gap-6 items-center">
             {menu.map((item, index) => (
               <div key={index} onClick={() => handleMenuClick(item.name)}>
@@ -116,20 +118,25 @@ function Header() {
         </div>
 
         {/* RIGHT */}
-        <div className="flex items-center gap-4">
-          <img
-            src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png"
-            className="w-9 h-9 rounded-full cursor-pointer"
-            onClick={handleLogout}
-          />
+        <div ref={avatarRef} className="relative  items-center">
+  {/* AVATAR */}
+  <img
+    src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png"
+    className="w-9 h-9 rounded-full cursor-pointer"
+    onClick={() => setShowLogout(!showLogout)}
+  />
 
-          <button
-            onClick={handleLogout}
-            className="hidden md:block bg-red-600 px-3 py-1 rounded text-white"
-          >
-            Logout
-          </button>
-        </div>
+  {/* LOGOUT DROPDOWN */}
+  {showLogout && (
+    <button
+      onClick={handleLogout}
+      className="absolute right-0 top-12 bg-red-600 px-4 py-2 rounded text-white text-sm shadow-lg hover:bg-red-700 transition"
+    >
+      Logout
+    </button>
+  )}
+</div>
+
       </header>
 
       {/* MOBILE SEARCH OVERLAY */}
