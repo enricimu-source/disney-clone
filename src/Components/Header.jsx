@@ -120,22 +120,22 @@ function Header() {
         {/* RIGHT */}
         <div ref={avatarRef} className="relative  items-center">
   {/* AVATAR */}
-  <img
-    src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png"
-    className="w-9 h-9 rounded-full cursor-pointer"
-    onClick={() => setShowLogout(!showLogout)}
-  />
+        <img
+          src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png"
+          className="w-9 h-9 rounded-full cursor-pointer"
+          onClick={() => setShowLogout(!showLogout)}
+        />
 
   {/* LOGOUT DROPDOWN */}
-  {showLogout && (
-    <button
-      onClick={handleLogout}
-      className="absolute right-0 top-12 bg-red-600 px-4 py-2 rounded text-white text-sm shadow-lg hover:bg-red-700 transition"
-    >
-      Logout
-    </button>
-  )}
-</div>
+         {showLogout && (
+          <button
+            onClick={handleLogout}
+            className="absolute right-0 top-12 bg-red-600 px-4 py-2 rounded text-white text-sm shadow-lg hover:bg-red-700 transition"
+           >
+             Logout
+          </button>
+        )}
+      </div>
 
       </header>
 
@@ -154,8 +154,7 @@ function Header() {
               <HiXMark className="text-2xl text-white" />
             </button>
           </div>
-
-          {/* 🔥 RESULTS SHOW WHILE TYPING 🔥 */}
+          
           <SearchResults />
         </div>
       )}

@@ -1,56 +1,73 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/Firebase";
-
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
-import Home from "./Pages/Home";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import Watchlist from './Pages/Watchlist'
+
+const Login = lazy(() => import("./Pages/Login"));
+const Signup = lazy(() => import("./Pages/Signup"));
+const Home = lazy(() => import("./Pages/Home"));
+const Watchlist = lazy(() => import("./Pages/Watchlist"));
+
+// Loader UI
+const Loader = () => (
+  <div className="h-screen flex items-center justify-center bg-black text-white">
+    Loading...
+  </div>
+);
 
 function App() {
   const [user, loading] = useAuthState(auth);
 
   if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-black text-white">
-        Loading...
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
-        />
+      <Suspense fallback={<Loader />}>
+        <Routes>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+          
+          <Route
+            path="/"
+            element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
+          />
 
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-  path="/watchlist"
-  element={
-    <ProtectedRoute>
-      <Watchlist />
-    </ProtectedRoute>
-  }
-/>
-  <Route path="/" element={<Home />} />
-<Route path="/watchlist" element={<Watchlist />} />
+        
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/home" /> : <Login />}
+          />
+          <Route
+            path="/signup"
+            element={user ? <Navigate to="/home" /> : <Signup />}
+          />
 
+         
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
 
-      </Routes>
+          <Route
+            path="/watchlist"
+            element={
+              <ProtectedRoute>
+                <Watchlist />
+              </ProtectedRoute>
+            }
+          />
+
+         
+          <Route path="*" element={<Navigate to="/" />} />
+
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
